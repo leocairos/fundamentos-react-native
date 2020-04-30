@@ -39,7 +39,7 @@ const Cart: React.FC = () => {
   const { increment, decrement, products } = useCart();
 
   function handleIncrement(id: string): void {
-    // TODO
+    // TODO.
   }
 
   function handleDecrement(id: string): void {
