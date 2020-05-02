@@ -57,15 +57,19 @@ const CartProvider: React.FC = ({ children }) => {
           ...products[productIndex],
           quantity: products[productIndex].quantity + 1,
         };
-        setProducts(newProducts);
-      } else {
-        setProducts([...products, product]);
-      }
 
-      await AsyncStorage.setItem(
-        '@GoMarketplace:productsCart',
-        JSON.stringify(products),
-      );
+        AsyncStorage.setItem(
+          '@GoMarketplace:productsCart',
+          JSON.stringify(newProducts),
+        );
+      } else {
+        setProducts([...products, { ...product, quantity: 1 }]);
+
+        AsyncStorage.setItem(
+          '@GoMarketplace:productsCart',
+          JSON.stringify([...products, { ...product, quantity: 1 }]),
+        );
+      }
     },
     [products],
   );
@@ -85,9 +89,9 @@ const CartProvider: React.FC = ({ children }) => {
         };
         setProducts(newProducts);
 
-        await AsyncStorage.setItem(
+        AsyncStorage.setItem(
           '@GoMarketplace:productsCart',
-          JSON.stringify(products),
+          JSON.stringify(newProducts),
         );
       }
     },
@@ -109,17 +113,23 @@ const CartProvider: React.FC = ({ children }) => {
         };
 
         if (newProducts[productIndex].quantity === 0) {
-          setProducts(
-            products.filter(productsFiltered => productsFiltered.id !== id),
+          const productsNew = products.filter(
+            productsFiltered => productsFiltered.id !== id,
+          );
+          setProducts(productsNew);
+
+          AsyncStorage.setItem(
+            '@GoMarketplace:productsCart',
+            JSON.stringify(productsNew),
           );
         } else {
           setProducts(newProducts);
-        }
 
-        await AsyncStorage.setItem(
-          '@GoMarketplace:productsCart',
-          JSON.stringify(products),
-        );
+          AsyncStorage.setItem(
+            '@GoMarketplace:productsCart',
+            JSON.stringify(newProducts),
+          );
+        }
       }
     },
     [products],
